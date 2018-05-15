@@ -1,7 +1,6 @@
 import pickle as pkl
 import numpy as np
 import tensorflow as tf
-import os
 import matplotlib.pyplot as plt
 
 from tensorflow.examples.tutorials.mnist import input_data
@@ -102,7 +101,7 @@ losses = []
 saver = tf.train.Saver(var_list=g_vars)
 with tf.Session() as sess:
     sess.run(tf.global_variables_initializer())
-    if 1:
+    if 0:
         saver.restore(sess, tf.train.latest_checkpoint("checkpoints"))
     for e in range(epochs):
         for ii in range(mnist.train.num_examples // batch_size):
@@ -142,8 +141,22 @@ with tf.Session() as sess:
         saver.save(sess, './checkpoints/generator.ckpt')
 
 # Save training generator samples
-with open('train_samples.pkl', 'wb') as f:
-    pkl.dump(samples, f)
+#with open('train_samples.pkl', 'wb') as f:
+#    pkl.dump(samples, f)
+
+# Show the results
+#with open('train_samples.pkl', 'rb') as f:
+#    samples = pkl.load(f)
+
+def view_samples(epoch, samples):
+    fig, axes = plt.subplots(figsize=(7, 7), nrows=4, ncols=4, sharey=True, sharex=True)
+    for ax, img in zip(axes.flatten(), samples[epoch]):
+        ax.xaxis.set_visible(False)
+        ax.yaxis.set_visible(False)
+        im = ax.imshow(img.reshape((28, 28)), cmap='Greys_r')
+    return fig, axes
+
+view_samples(-1, samples)
 
 if __name__ == "__main__":
     pass
